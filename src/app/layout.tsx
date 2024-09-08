@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import Header from "@/components/Header";
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({ subsets: ['latin']})
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,12 +29,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+        <html lang="en">
+            <body className={`${montserrat.className} bg-white`}>
+                <SignedOut>
+                    {/* <SignInButton /> */}
+                </SignedOut>
+                <SignedIn>
+                    {/* <UserButton /> */}
+                </SignedIn>
+                <Header />
+                {children}
+            </body>
+        </html>
+    </ClerkProvider>
   );
 }
