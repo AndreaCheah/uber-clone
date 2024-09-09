@@ -14,7 +14,6 @@ interface Option {
 
 export default function InputItem({ type }: InputItemProps) {
     const [value, setValue] = useState<Option | null>(null);
-
   return (
     <div className="bg-slate-200 p-3 rounded-lg mt-3 
         flex items-center gap-4">
@@ -24,18 +23,32 @@ export default function InputItem({ type }: InputItemProps) {
             width={15}
             height={15}
         />
-        {/* <input 
-            type="text"
-            placeholder={type === "source" ? "Pickup Address" : "Destination Address"}
-            className="bg-transparent w-full outline-none text-black"
-        /> */}
+        {/* Enable both the Places API and Maps JavaScript API as Google Autocomplete relies on it */}
         <GooglePlacesAutocomplete
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
             selectProps={{
                 value,
                 onChange: setValue,
+                placeholder: type === "source" ? "Pickup Address" : "Destination Address",
+                // explicitly define id to ensure consistent id for both server and client-side rendering
+                instanceId: type === "source" ? "pickup-location" : "destination-location",
+                isClearable: true,  // for a more intuitive UX where user can click cross button to clear the input
+                className: "w-full",
+                // components:{
+                //     DropdownIndicator: false
+                // },
+                styles: {
+                    control: (provided) => ({
+                        ...provided,
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                    }),
+                    option: (provided) => ({
+                        ...provided,
+                        color: 'black'
+                    })
+                }
             }}
-            // add more props at 58:00
         />
     </div>
   )
